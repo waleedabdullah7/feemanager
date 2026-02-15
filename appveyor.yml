@@ -7,10 +7,11 @@ environment:
   nodejs_version: "18"
   npm_config_build_from_source: false
 cache:
-  - node_modules
+  - fixed-project\node_modules
   - '%APPDATA%\npm-cache'
 install:
   - ps: Install-Product node $env:nodejs_version
+  - cd fixed-project
   - npm install --global node-gyp
   - npm install
 build_script:
@@ -18,5 +19,5 @@ build_script:
   - npm run electron:build:win
 test: off
 artifacts:
-  - path: release\*.exe
+  - path: fixed-project\release\*.exe
     name: WindowsInstaller
