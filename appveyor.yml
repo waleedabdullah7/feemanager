@@ -1,23 +1,52 @@
-version: 1.0.{build}
-image: Visual Studio 2022
-build: off
+version: 3.0.{build}
+
+# Platform and image
 platform:
   - x64
+
+image: Visual Studio 2022
+
+# Environment variables
 environment:
-  nodejs_version: "18"
-  npm_config_build_from_source: false
+  nodejs_version: "22"
+  matrix:
+    - project: fixed-project
+
+# Cache node_modules for faster builds
 cache:
-  - fixed-project\node_modules
-  - '%APPDATA%\npm-cache'
+  - fixed-project/node_modules -> fixed-project/package-lock.json
+
+# Branches to build
+branches:
+  only:
+    - main
+    - master
+
+# Install dependencies
 install:
   - ps: Install-Product node $env:nodejs_version
+  - node --version
+  - npm --version
+  - echo "Installing dependencies..."
   - cd fixed-project
-  - npm install --global node-gyp
-  - npm install
+  - npm ci || npm install
+
+# Build the project
 build_script:
+  - echo "Building project..."
+  - cd fixed-project
   - npm run build
-  - npm run electron:build:win
+
+# Skip automatic tests
 test: off
+
+# Artifacts
 artifacts:
-  - path: fixed-project\release\*.exe
-    name: WindowsInstaller
+  - path: fixed-project/dist/**/*
+    name: FeeManager-Build
+
+# Notifications (optional)
+notifications:
+  - provider: Email
+    on_build_success: false
+    on_build_failure: true
