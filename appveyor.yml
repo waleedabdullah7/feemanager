@@ -1,0 +1,22 @@
+version: 1.0.{build}
+image: Visual Studio 2022
+build: off
+platform:
+  - x64
+environment:
+  nodejs_version: "18"
+  npm_config_build_from_source: false
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm install --global node-gyp
+  - npm install
+build_script:
+  - npm run build
+  - npm run electron:build:win
+test: off
+artifacts:
+  - path: release\*.exe
+    name: WindowsInstaller
