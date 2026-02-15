@@ -1,7 +1,7 @@
 {
   "name": "school-fee-manager-desktop",
   "version": "3.0.0",
-  "type": "module",  
+  "type": "module",
   "description": "School Fee Manager Pro - Desktop Edition with Unlimited Storage",
   "author": "MWA Software",
   "license": "Commercial",
@@ -44,7 +44,7 @@
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.0",
     "vite": "^7.2.0",
-    "vite-plugin-singlefile": "^2.0.2",  
+    "vite-plugin-singlefile": "^2.0.2",
     "wait-on": "^7.2.0"
   },
   "build": {
