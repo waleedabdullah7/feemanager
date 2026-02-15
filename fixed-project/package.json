@@ -1,7 +1,7 @@
 {
   "name": "school-fee-manager-desktop",
   "version": "3.0.0",
-  "type": "module",  ← ADD THIS LINE
+  "type": "module",  
   "description": "School Fee Manager Pro - Desktop Edition with Unlimited Storage",
   "author": "MWA Software",
   "license": "Commercial",
