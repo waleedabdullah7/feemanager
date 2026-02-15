@@ -4,7 +4,7 @@ version: 3.0.{build}
 # Operating System Image
 image: Visual Studio 2022
 
-# Node.js Environment - REQUIRED: Version 22+ for Vite 7
+# Node.js Environment - Version 22+ for Vite 7
 environment:
   nodejs_version: "22"
 
@@ -14,7 +14,7 @@ branches:
     - main
     - master
 
-# Cache node_modules for faster builds
+# Cache for faster builds
 cache:
   - fixed-project/node_modules -> fixed-project/package-lock.json
 
@@ -22,34 +22,29 @@ cache:
 install:
   # Install Node.js 22
   - ps: Install-Product node $env:nodejs_version
-  # Verify versions
   - node --version
   - npm --version
-  # Navigate to project folder
+  # Navigate to project folder ONCE
   - cd fixed-project
-  # Clean install
+  # Clean and install
   - npm cache clean --force
   - npm install
 
 # Build Phase
 build_script:
-  # Navigate to project folder
-  - cd fixed-project
-  # Run build
+  # Build (already in fixed-project from install phase)
   - npm run build
 
 # Skip tests
 test: off
 
-# Save build artifacts
+# Save artifacts
 artifacts:
   - path: fixed-project/dist
     name: FeeManager-Build
-    type: zip
 
 # Notifications
 notifications:
   - provider: Email
     on_build_success: false
     on_build_failure: true
-    on_build_status_changed: true
