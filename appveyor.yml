@@ -1,52 +1,55 @@
+# AppVeyor CI Configuration - School Fee Manager Desktop
 version: 3.0.{build}
 
-# Platform and image
-platform:
-  - x64
-
+# Operating System Image
 image: Visual Studio 2022
 
-# Environment variables
+# Node.js Environment - REQUIRED: Version 22+ for Vite 7
 environment:
   nodejs_version: "22"
-  matrix:
-    - project: fixed-project
 
-# Cache node_modules for faster builds
-cache:
-  - fixed-project/node_modules -> fixed-project/package-lock.json
-
-# Branches to build
+# Build Branches
 branches:
   only:
     - main
     - master
 
-# Install dependencies
+# Cache node_modules for faster builds
+cache:
+  - fixed-project/node_modules -> fixed-project/package-lock.json
+
+# Installation Phase
 install:
+  # Install Node.js 22
   - ps: Install-Product node $env:nodejs_version
+  # Verify versions
   - node --version
   - npm --version
-  - echo "Installing dependencies..."
+  # Navigate to project folder
   - cd fixed-project
-  - npm ci || npm install
+  # Clean install
+  - npm cache clean --force
+  - npm install
 
-# Build the project
+# Build Phase
 build_script:
-  - echo "Building project..."
+  # Navigate to project folder
   - cd fixed-project
+  # Run build
   - npm run build
 
-# Skip automatic tests
+# Skip tests
 test: off
 
-# Artifacts
+# Save build artifacts
 artifacts:
-  - path: fixed-project/dist/**/*
+  - path: fixed-project/dist
     name: FeeManager-Build
+    type: zip
 
-# Notifications (optional)
+# Notifications
 notifications:
   - provider: Email
     on_build_success: false
     on_build_failure: true
+    on_build_status_changed: true
