@@ -1,0 +1,30 @@
+version: 1.0.{build}
+image: Visual Studio 2022
+platform:
+  - x64
+environment:
+  nodejs_version: "18"
+  npm_config_build_from_source: false
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm install --global node-gyp
+  - npm install
+build_script:
+  - npm run build
+  - npm run electron:build:win
+test: off
+artifacts:
+  - path: release\*.exe
+    name: WindowsInstaller
+deploy:
+  - provider: GitHub
+    release: v$(appveyor_build_version)
+    description: 'Automatic release'
+    auth_token:
+      secure: YOUR_GITHUB_TOKEN_HERE
+    artifact: WindowsInstaller
+    on:
+      appveyor_repo_tag: true
